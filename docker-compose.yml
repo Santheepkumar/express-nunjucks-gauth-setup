@@ -1,0 +1,81 @@
+  version: '3.9'
+
+  services:
+    nodejs:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      depends_on:
+        - daruk-mongo
+      container_name: nodejs
+      env_file: .env
+      environment: 
+        - API_PORT=${API_PORT}
+        - SESSION_SECRET=${SESSION_SECRET}
+        - MAIN_DB_URL=${MAIN_DB_URL}
+        - SESSION_DB_URL=${SESSION_DB_URL}
+        - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+        - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+        - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
+      # restart: unless-stopped
+      networks:
+        - app-network
+
+    webserver:
+      image: nginx:mainline-alpine
+      container_name: webserver
+      restart: unless-stopped
+      ports:
+        - "80:80"
+        - "443:443"
+      volumes:
+        - web-root:/var/www/html
+        - ./nginx-conf:/etc/nginx/conf.d
+        - certbot-etc:/etc/letsencrypt
+        - certbot-var:/var/lib/letsencrypt
+        - dhparam:/etc/ssl/certs
+      networks:
+        - app-network
+
+    certbot:
+      image: certbot/certbot
+      container_name: certbot
+      volumes:
+        - certbot-etc:/etc/letsencrypt
+        - certbot-var:/var/lib/letsencrypt
+        - web-root:/var/www/html
+      depends_on:
+        - webserver
+      command: --webroot --webroot-path=/var/www/html renew --dry-run
+         #command: certonly --webroot --webroot-path=/var/www/html --email thirunavukkarasu@skematix.in --agree-tos --no-eff-email -d daruk.io 
+    
+    daruk-mongo:
+      container_name: daruk-mongo
+      image: mongo:4.0
+      ports:
+        - "27018:27017"
+      networks:
+        - app-network
+      volumes:
+        - db-data:/data/db
+
+  volumes:
+    certbot-etc:
+    certbot-var:
+    db-data:
+    web-root:
+      driver: local
+      driver_opts:
+        type: none
+        device: /home/ubuntu/apps/daruk.io/home
+        o: bind
+    dhparam:
+      driver: local
+      driver_opts:
+        type: none
+        device: /home/ubuntu/apps/daruk.io/dhparam/
+        o: bind
+
+  networks:
+    app-network:
+      driver: bridge
