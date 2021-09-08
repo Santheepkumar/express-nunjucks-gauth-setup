@@ -1,0 +1,32 @@
+{
+  "name": "new-webx-proj",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "@tailwindcss/aspect-ratio": "^0.2.1",
+    "connect-mongo": "^4.5.0",
+    "cors": "^2.8.5",
+    "csurf": "^1.11.0",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.2",
+    "gulp": "^4.0.2",
+    "joi": "^17.4.2",
+    "mongoose": "^6.0.2",
+    "mongoose-history": "^0.8.0",
+    "nunjucks": "^3.2.3",
+    "passport": "^0.4.1",
+    "passport-google-oauth2": "^0.2.0",
+    "tailwindcss": "^2.2.7"
+  },
+  "scripts": {
+    "dev": "nodemon app",
+    "build-css": "NODE_ENV=production npx tailwindcss -o public/style.css"
+  },
+  "devDependencies": {
+    "autoprefixer": "^10.3.3",
+    "nodemon": "^2.0.12",
+    "postcss": "^8.3.6"
+  }
+}

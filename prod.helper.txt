@@ -1,0 +1,8 @@
+Recreating certbot:
+docker-compose up --force-recreate --no-deps certbot
+
+Recreating webserver
+docker-compose --env-file ./.env up --force-recreate --no-deps webserver
+
+Create openssl key
+sudo openssl dhparam -out /home/ubuntu/apps/daruk-meeting-assistant/dhparam/dhparam-2048.pem 2048

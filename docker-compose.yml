@@ -5,6 +5,7 @@
       build:
         context: .
         dockerfile: Dockerfile
+      # image: node:15
       depends_on:
         - daruk-mongo
       container_name: nodejs
@@ -12,8 +13,8 @@
       environment: 
         - API_PORT=${API_PORT}
         - SESSION_SECRET=${SESSION_SECRET}
-        - MAIN_DB_URL=${MAIN_DB_URL}
-        - SESSION_DB_URL=${SESSION_DB_URL}
+        - MONGO_HOST=${MONGO_HOST}
+        - MONGO_PORT=${MONGO_PORT}
         - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
         - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
         - GOOGLE_CALLBACK_URL=${GOOGLE_CALLBACK_URL}
@@ -46,8 +47,8 @@
         - web-root:/var/www/html
       depends_on:
         - webserver
-      command: --webroot --webroot-path=/var/www/html renew --dry-run
-         #command: certonly --webroot --webroot-path=/var/www/html --email thirunavukkarasu@skematix.in --agree-tos --no-eff-email -d daruk.io 
+      command: certonly --webroot --webroot-path=/var/www/html --email santheep.v@skematix.in --agree-tos --no-eff-email --force-renewal -d daruk.skematix.in -d www.daruk.skematix.in 
+      # command: certonly --webroot --webroot-path=/var/www/html --email santheep.v@skematix.in --agree-tos --no-eff-email --staging -d daruk.skematix.in -d www.daruk.skematix.in 
     
     daruk-mongo:
       container_name: daruk-mongo
@@ -67,13 +68,13 @@
       driver: local
       driver_opts:
         type: none
-        device: /home/ubuntu/apps/daruk.io/home
+        device: /home/ubuntu/apps/daruk-meeting-assistant/views
         o: bind
     dhparam:
       driver: local
       driver_opts:
         type: none
-        device: /home/ubuntu/apps/daruk.io/dhparam/
+        device: /home/ubuntu/apps/daruk-meeting-assistant/dhparam/
         o: bind
 
   networks:
